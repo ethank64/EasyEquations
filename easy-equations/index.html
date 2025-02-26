@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LaTeX to Word Converter</title>
+</head>
+<script>
+    window.electronAPI.onConversionStatus((status) => {
+        document.getElementById("status").innerText = status;
+    });
+</script>
+<body>
+    <h1>LaTeX to Word Converter</h1>
+    <textarea id="latexInput" rows="10" cols="50" placeholder="Enter LaTeX code here..."></textarea><br>
+    <button onclick="convertToWord()">Convert to Word</button>
+    <p id="status"></p>
+    <script>
+        function convertToWord() {
+            const latexCode = document.getElementById("latexInput").value;
+            window.electronAPI.sendLatexToConvert(latexCode);
+        }
+    </script>
+</body>
+</html>
