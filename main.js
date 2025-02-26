@@ -35,8 +35,10 @@ ipcMain.on('convert-latex', (event, latexCode) => {
         exec(`pandoc "${tempTexPath}" -o "${outputDocxPath}"`, (error, stdout, stderr) => {
             if (error) {
                 event.reply('conversion-status', `Error: ${stderr}`);
+                console.error(`Error: ${stderr}`);
             } else {
-                event.reply('conversion-status', `Conversion successful! File saved to Desktop.`);
+                console.log(`File saved at: ${outputDocxPath}`);
+                event.reply('conversion-status', `Conversion successful! File saved at: ${outputDocxPath}`);
                 unlink(tempTexPath, () => {}); // Delete temporary file
             }
         });
