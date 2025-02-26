@@ -47,34 +47,13 @@ This `.exe` file can be distributed to users for installation.
 
 ---
 
-## 📁 Project Structure
-```
-EasyEquations/
-│-- resources/                # Contains bundled Pandoc executable
-│   ├── pandoc/
-│       ├── pandoc.exe
-│       ├── pandoc-citeproc.exe
-│-- src/                      # Main source code
-│   ├── main.js               # Electron main process
-│   ├── preload.js            # Secure IPC communication
-│   ├── index.html            # User interface
-│-- package.json              # Project metadata & dependencies
-│-- README.md                 # This file
-```
-
 ---
 
 ## 📦 Dependencies
 - **Electron** - Desktop app framework  
-- **Pandoc** - Converts LaTeX to Word (`.docx`)  
 - **Node.js** - JavaScript runtime  
 
 All dependencies are installed via `npm install`.
-
----
-
-## 📜 License
-This project is licensed under the **MIT License**.
 
 ---
 

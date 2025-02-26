@@ -1,124 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaTeX to Word Converter</title>
-    <style>
-        /* General Page Styling */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f4f4f4;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LaTeX to Word Converter</title>
+  <style>
+    /* General Page Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* Container for centering content */
-        .container {
-            width: 50%;
-            background: white;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    /* Main container */
+    .container {
+      width: 50%;
+      background: white;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
 
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
+      /* Fade-in animation */
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
 
-        /* Textarea styling */
-        textarea {
-            width: 100%;
-            height: 200px;
-            font-size: 16px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            resize: none;
-            outline: none;
-            transition: 0.3s;
-        }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        textarea:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
 
-        /* Button Styling */
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
+    /* Textarea Styling */
+    textarea {
+      width: calc(100% - 20px); /* Keeps it centered with padding */
+      margin: 0 auto;
+      display: block;
+      height: 200px;
+      font-size: 16px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: none;
+      outline: none;
+      transition: 0.3s;
+    }
 
-        button:hover {
-            background: #0056b3;
-        }
+    textarea:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
 
-        /* Status Message */
-        #status {
-            margin-top: 15px;
-            padding: 10px;
-            font-weight: bold;
-            border-radius: 5px;
-            display: inline-block;
-            min-width: 300px;
-        }
+    /* Convert Button Styling */
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 15px;
+    }
 
-        /* Success Message */
-        .success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
+    button:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
 
-        /* Error Message */
-        .error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    /* Status Message */
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 5px;
+      display: block;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #status.show {
+      opacity: 1;
+    }
+
+    /* Success Message */
+    .success {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+    }
+
+    /* Error Message */
+    .error {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>LaTeX to Word Converter</h1>
+    <textarea id="latexInput" placeholder="Enter LaTeX code here..."></textarea>
 
-    <div class="container">
-        <h1>LaTeX to Word Converter</h1>
-        <textarea id="latexInput" placeholder="Enter LaTeX code here..."></textarea>
-        <br>
-        <button onclick="convertToWord()">Convert to Word</button>
-        <p id="status"></p>
-    </div>
+    <button onclick="convertToWord()">Convert to Word</button>
 
-    <script>
-        function convertToWord() {
-            const latexCode = document.getElementById("latexInput").value;
-            if (latexCode.trim() === "") {
-                displayStatus("Please enter LaTeX code before converting.", "error");
-                return;
-            }
-            window.electronAPI.sendLatexToConvert(latexCode);
-        }
+    <p id="status"></p>
+  </div>
 
-        window.electronAPI.onConversionStatus((status) => {
-            displayStatus(status, status.includes("Error") ? "error" : "success");
-        });
+  <script>
+    async function convertToWord() {
+      const latexCode = document.getElementById("latexInput").value.trim();
+      if (!latexCode) {
+        displayStatus("Please enter LaTeX code before converting.", "error");
+        return;
+      }
 
-        function displayStatus(message, type) {
-            const statusElement = document.getElementById("status");
-            statusElement.innerText = message;
-            statusElement.className = type;
-        }
-    </script>
+      // Open file explorer to select save location
+      const savePath = await window.electronAPI.openSaveDialog();
+      if (!savePath) {
+        displayStatus("Conversion canceled: No save location selected.", "error");
+        return;
+      }
 
+      // Send LaTeX + chosen save path to main process
+      window.electronAPI.sendLatexToConvert({
+        latexCode,
+        savePath
+      });
+    }
+
+    // Listen for status updates from main process
+    window.electronAPI.onConversionStatus((status) => {
+      displayStatus(status, status.includes("Error") ? "error" : "success");
+    });
+
+    function displayStatus(message, type) {
+      const statusElement = document.getElementById("status");
+      statusElement.innerText = message;
+      statusElement.className = type + " show"; // Apply the "show" class to fade in
+    }
+  </script>
 </body>
 </html>
