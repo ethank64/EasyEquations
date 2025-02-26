@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX to Word Converter</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for centering content */
+        .container {
+            width: 50%;
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Textarea styling */
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Button Styling */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Status Message */
+        #status {
+            margin-top: 15px;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: inline-block;
+            min-width: 300px;
+        }
+
+        /* Success Message */
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* Error Message */
+        .error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>LaTeX to Word Converter</h1>
+        <textarea id="latexInput" placeholder="Enter LaTeX code here..."></textarea>
+        <br>
+        <button onclick="convertToWord()">Convert to Word</button>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        function convertToWord() {
+            const latexCode = document.getElementById("latexInput").value;
+            if (latexCode.trim() === "") {
+                displayStatus("Please enter LaTeX code before converting.", "error");
+                return;
+            }
+            window.electronAPI.sendLatexToConvert(latexCode);
+        }
+
+        window.electronAPI.onConversionStatus((status) => {
+            displayStatus(status, status.includes("Error") ? "error" : "success");
+        });
+
+        function displayStatus(message, type) {
+            const statusElement = document.getElementById("status");
+            statusElement.innerText = message;
+            statusElement.className = type;
+        }
+    </script>
+
+</body>
+</html>
