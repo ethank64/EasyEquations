@@ -19,6 +19,11 @@ app.whenReady().then(() => {
     mainWindow.loadFile('index.html');
 });
 
+// Determine the Pandoc path (use the bundled version in "resources/pandoc/")
+const pandocPath = path.join(process.resourcesPath, 'pandoc', 'pandoc.exe');
+console.log(`Using Pandoc from: ${pandocPath}`);
+
+
 // Listen for LaTeX input from the renderer process
 ipcMain.on('convert-latex', (event, latexCode) => {
     const tempTexPath = path.join(app.getPath('temp'), 'document.tex');
@@ -31,8 +36,8 @@ ipcMain.on('convert-latex', (event, latexCode) => {
             return;
         }
 
-        // Convert to Word using Pandoc
-        exec(`pandoc "${tempTexPath}" -o "${outputDocxPath}"`, (error, stdout, stderr) => {
+        // Convert to Word using the bundled Pandoc
+        exec(`"${pandocPath}" "${tempTexPath}" -o "${outputDocxPath}"`, (error, stdout, stderr) => {
             if (error) {
                 event.reply('conversion-status', `Error: ${stderr}`);
                 console.error(`Error: ${stderr}`);
