@@ -2,6 +2,8 @@
 
 Easy Equations is a Windows desktop application built with **Electron.js** that allows users to input LaTeX code, convert it into a `.tex` file, and generate a `.docx` file using **Pandoc**. The application is fully self-contained, bundling Pandoc so users do not need to install it separately.
 
+Pandoc is too big for this repo, so you'll need to download it here: https://github.com/jgm/pandoc/releases/tag/3.6.3 and put it in a folder called "resources". You may have to tweak the code depending on the version of pandoc you're using, but it should work fine for Windows users.
+
 ## 🚀 Getting Started
 
 ### **1️⃣ Clone the Repository**
